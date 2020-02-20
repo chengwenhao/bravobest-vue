@@ -5,7 +5,7 @@
            label-width="0px">
     <h3 class="login_title">系统登录</h3>
     <el-form-item>
-      <el-input type="text" v-model="loginForm.username"
+      <el-input type="text" v-model="loginForm.loginName"
                 auto-complete="off" placeholder="账号"></el-input>
     </el-form-item>
     <el-form-item>
@@ -25,7 +25,7 @@ export default {
   data () {
     return {
       loginForm:{
-        username: 'admin',
+        loginName: 'admin',
         password: 'admin'
       }
     }
@@ -36,17 +36,18 @@ export default {
         this.$axios.post('/login',
           this.$qs.stringify(
             {
-              userName : this.loginForm.username,
+              loginName : this.loginForm.loginName,
               password : this.loginForm.password
             }
           )
         ).then(successResponse => {
           console.log(successResponse.data);
-          alert(successResponse.data.resultMessage);
-          if (successResponse.data.resultCode === 0){
+          if (successResponse.data.code === 0){
             _this.$store.commit('login', _this.loginForm);
+            this.$router.replace({path: path === '/' || path === undefined ? '/index' : path});
             // var path = this.$route.query.redirect;
-            // this.$router.replace({path: path === '/' || path === undefined ? '/index' : path});
+          } else {
+            alert(successResponse.data.message);
           }
         }).catch(failResponse => {
         })
